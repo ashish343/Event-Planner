@@ -1,5 +1,5 @@
 package parse.notifications;
 
-public enum RESTAPI {
+public enum RestApi {
 
 }
