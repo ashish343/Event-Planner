@@ -1,7 +1,6 @@
 package event;
 
 import java.io.IOException;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import javax.servlet.ServletException;
@@ -44,7 +43,7 @@ public class CreateEvent extends DefaultController {
 		// TODO Auto-generated method stub
 	}
 
-	private void addtoDB(EventData eventData) throws UnknownHostException {
+	private void addtoDB(EventData eventData) throws IOException {
 		DataConnection.addEvent(eventData);
 	}
 
