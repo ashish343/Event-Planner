@@ -1,13 +1,13 @@
 package event;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import contacts.Contact;
 
 public class EventData {
 	private String owner;
 	private String eventId;
-	private ArrayList<Contact> contacts;
+	private List<Contact> contacts;
 
 	public String getOwner() {
 		return owner;
@@ -25,11 +25,11 @@ public class EventData {
 		this.eventId = eventId;
 	}
 
-	public ArrayList<Contact> getContacts() {
+	public List<Contact> getContacts() {
 		return contacts;
 	}
 
-	public void setContacts(ArrayList<Contact> contacts) {
+	public void setContacts(List<Contact> contacts) {
 		this.contacts = contacts;
 	}
 

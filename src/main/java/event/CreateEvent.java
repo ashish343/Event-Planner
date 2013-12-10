@@ -10,6 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import parse.notifications.Notifications;
 import servlet.DefaultController;
 import contacts.Contact;
 import database.mongo.DataConnection;
@@ -26,7 +27,7 @@ public class CreateEvent extends DefaultController {
 		if (eventData != null) {
 			try {
 				addtoDB(eventData);
-				notifyForNewEvent(eventId);
+				notifyForNewEvent(eventData);
 			} catch (Exception e) {
 				// TODO: May be add a retry here.
 			}
@@ -40,8 +41,9 @@ public class CreateEvent extends DefaultController {
 		response.setStatus(HttpServletResponse.SC_OK);
 	}
 
-	private void notifyForNewEvent(String eventId) {
-		// TODO Auto-generated method stub
+	private void notifyForNewEvent(EventData eventData) {
+		Notifications.registerChannel(eventData);
+		Notifications.notifyChannel(eventData);
 	}
 
 	private void addtoDB(EventData eventData) throws UnknownHostException {
