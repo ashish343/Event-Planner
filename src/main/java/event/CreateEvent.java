@@ -24,6 +24,7 @@ public class CreateEvent extends DefaultController {
 	@Override
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
+		
 		String eventId = EventIdGenerator.generateUniqueEventId();
 
 		EventData eventData = null;

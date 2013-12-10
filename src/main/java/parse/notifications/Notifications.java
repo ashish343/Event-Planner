@@ -14,23 +14,8 @@ import event.EventData;
 public class Notifications {
 	public static void main(String[] args) {
 
-//		HttpURLConnection con = null;
-//		
-//		String reqbody = "{\"channels\": [\"Testing\"]}";
 		try {
 			testNotifyChannel();
-//			con = ConnectionUtilility.getHttpConnection("https://api.parse.com/1/installations/KpKuBtVCCB", "PUT");
-//			initializeConnection(con);
-//			
-//			DataOutputStream out = new DataOutputStream(con.getOutputStream());
-//			out.writeBytes(reqbody);
-//			out.flush();
-//			out.close();
-//
-//			con.connect();
-//			
-//			getResponseData(con);
-			
 		} catch (Exception e) {
 			System.out.println(e);
 		}
@@ -102,24 +87,20 @@ public class Notifications {
 		String channel = eventData.getEventId();
 		String msg = "{\"channels\":[\"" + channel + "\"],\"data\": {\"alert\":\""+ Message + "\"}}";
 		
-		List<Contact> contacts = eventData.getContacts();
 		
-		for(Contact contact : contacts) {
-			try {
-				String objectId = contact.getUid();
-				con = ConnectionUtilility.getHttpConnection(RestApi.PARSE_HOST.toString() + RestApi.PUSH.toString(), "POST");
-				initializeConnection(con);
-				
-				DataOutputStream out = new DataOutputStream(con.getOutputStream());
-				out.writeBytes(msg);
-				out.flush();
-				out.close();
-				con.connect();
-				//TODO: No need to print.
-				getResponseData(con);
-			} catch (Exception e) {
-				System.out.println(e);
-			}
+		try {
+			con = ConnectionUtilility.getHttpConnection(RestApi.PARSE_HOST.toString() + RestApi.PUSH.toString(), "POST");
+			initializeConnection(con);
+			
+			DataOutputStream out = new DataOutputStream(con.getOutputStream());
+			out.writeBytes(msg);
+			out.flush();
+			out.close();
+			con.connect();
+			//TODO: No need to print.
+			getResponseData(con);
+		} catch (Exception e) {
+			System.out.println(e);
 		}
 	}
 	
