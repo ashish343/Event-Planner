@@ -9,6 +9,17 @@ public class EventData {
 	private String eventId;
 	private List<Contact> contacts;
 
+	public EventData() {
+
+	}
+
+	public EventData(String owner, String eventId, List<Contact> contacts) {
+		super();
+		this.owner = owner;
+		this.eventId = eventId;
+		this.contacts = contacts;
+	}
+
 	public String getOwner() {
 		return owner;
 	}

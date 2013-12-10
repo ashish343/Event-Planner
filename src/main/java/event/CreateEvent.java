@@ -9,6 +9,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import parse.notifications.Notifications;
 import servlet.DefaultController;
 import contacts.Contact;
@@ -22,13 +26,19 @@ public class CreateEvent extends DefaultController {
 			HttpServletResponse response) throws ServletException, IOException {
 		String eventId = EventIdGenerator.generateUniqueEventId();
 
-		EventData eventData = createEventDataObject(eventId, request);
+		EventData eventData = null;
+		try {
+			eventData = createEventDataObject(eventId, request);
+		} catch (JSONException e1) {
+			e1.printStackTrace();
+		}
+
 		if (eventData != null) {
 			try {
 				addtoDB(eventData);
 				notifyForNewEvent(eventData);
 			} catch (Exception e) {
-				// TODO: May be add a retry here.
+				e.printStackTrace();
 			}
 		}
 
@@ -50,28 +60,26 @@ public class CreateEvent extends DefaultController {
 	}
 
 	private EventData createEventDataObject(String eventId,
-			HttpServletRequest request) {
+			HttpServletRequest request) throws JSONException {
 		EventData eventData = null;
 		String contacts = request.getParameter(EventParams.CONTACT_LIST
 				.toString());
+		JSONArray jar = new JSONArray(contacts);
+		ArrayList<Contact> carr = new ArrayList<Contact>();
+		for (int ix = 0; ix < jar.length(); ix++) {
+			JSONObject obj = (JSONObject) jar.get(ix);
+			String name = obj.getString(EventParams.NAME.toString());
+			String phone = obj.getString(EventParams.CONTACT_NUMBER.toString());
+			carr.add(new Contact(name, phone));
+		}
 
 		String objectId = request
 				.getParameter(EventParams.OBJECT_ID.toString());
 
 		if (objectId != null) {
-			eventData = new EventData();
-			ArrayList<Contact> contactList = getContactsList(contacts);
-
-			eventData.setEventId(eventId);
-			eventData.setContacts(contactList);
-			eventData.setOwner(objectId);
+			eventData = new EventData("", eventId, carr);
 		}
 		return eventData;
-	}
-
-	private ArrayList<Contact> getContactsList(String contacts) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }
