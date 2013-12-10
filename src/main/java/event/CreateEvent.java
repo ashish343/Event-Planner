@@ -1,7 +1,6 @@
 package event;
 
 import java.io.IOException;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import javax.servlet.ServletException;
@@ -46,7 +45,7 @@ public class CreateEvent extends DefaultController {
 		Notifications.notifyChannel(eventData);
 	}
 
-	private void addtoDB(EventData eventData) throws UnknownHostException {
+	private void addtoDB(EventData eventData) throws IOException {
 		DataConnection.addEvent(eventData);
 	}
 
@@ -55,6 +54,7 @@ public class CreateEvent extends DefaultController {
 		EventData eventData = null;
 		String contacts = request.getParameter(EventParams.CONTACT_LIST
 				.toString());
+
 		String objectId = request
 				.getParameter(EventParams.OBJECT_ID.toString());
 
