@@ -1,4 +1,4 @@
-package parse.notifications;
+package event.parse.notifications;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
