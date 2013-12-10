@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 
+import event.EventData;
+
 public class Notifications {
 	public static void main(String[] args) {
 
@@ -33,6 +35,7 @@ public class Notifications {
 		}
 	}
 
+	
 	private static void getResponseData(HttpURLConnection con) throws IOException {
 		BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
 		
@@ -45,6 +48,14 @@ public class Notifications {
 		String result = sb.toString();
 		System.out.println("Result is:" + result);
 		in.close();
+	}
+	
+	public static void registerChannel(EventData eventData) {
+		
+	}
+	
+	public static void notifyChannel(EventData eventData) {
+		
 	}
 	
 }

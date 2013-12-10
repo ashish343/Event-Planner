@@ -8,7 +8,9 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.MongoClient;
 
-class DataConnection {
+import event.EventData;
+
+public class DataConnection {
 
     private static MongoClient mongoClient;
     private static DB db;
@@ -17,6 +19,20 @@ class DataConnection {
     private static DBCursor cursor;
   
     public static void main(String args[]) throws UnknownHostException {
+    	mongoClient = new MongoClient();
+        db = mongoClient.getDB("dealsbytheway");
+        dbc = db.getCollection("sellerInfo");
+        System.out.println(dbc.toString());
+    }
+    
+    public static void addEvent(EventData evetnData) throws UnknownHostException {
+    	mongoClient = new MongoClient();
+        db = mongoClient.getDB("dealsbytheway");
+        dbc = db.getCollection("sellerInfo");
+        System.out.println(dbc.toString());
+    }
+    
+    public static void modifyEvent(String args[]) throws UnknownHostException {
     	mongoClient = new MongoClient();
         db = mongoClient.getDB("dealsbytheway");
         dbc = db.getCollection("sellerInfo");
