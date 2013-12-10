@@ -52,6 +52,7 @@ public class CreateEvent extends DefaultController {
 		EventData eventData = null;
 		String contacts = request.getParameter(EventParams.CONTACT_LIST
 				.toString());
+
 		String objectId = request
 				.getParameter(EventParams.OBJECT_ID.toString());
 
