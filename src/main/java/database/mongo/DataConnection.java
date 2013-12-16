@@ -3,15 +3,18 @@ package database.mongo;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.UnknownHostException;
+import java.util.List;
 
+import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
+import com.mongodb.util.JSON;
 
+import contacts.Contact;
 import event.EventData;
 
 public class DataConnection {
@@ -20,8 +23,11 @@ public class DataConnection {
 	private String mongoURI;
 	private String db;
 	private static DB mongoDb;
-	private static BasicDBObject query = new BasicDBObject();
-	private static DBCursor cursor;
+	private static String EVENTABLE;
+	private static String USERTABLE;
+
+	private static DBCollection event;
+	private static DBCollection user;
 
 	private DataConnection() throws IOException {
 		BufferedReader br = new BufferedReader(new FileReader("config"));
@@ -36,6 +42,12 @@ public class DataConnection {
 			case "db":
 				db = arr[1];
 				break;
+			case "event_table":
+				EVENTABLE = arr[1];
+				break;
+			case "user_table":
+				USERTABLE = arr[1];
+				break;
 			}
 		}
 		br.close();
@@ -44,9 +56,12 @@ public class DataConnection {
 					.println("Connection Information or DB information not present.. Exiting");
 			System.exit(1);
 		}
+
 		mongoClient = new MongoClient(new MongoClientURI(mongoURI));
 		mongoDb = mongoClient.getDB(db);
-
+		System.out.println(mongoDb.collectionExists(EVENTABLE));
+		event = mongoDb.getCollection(EVENTABLE);
+		user = mongoDb.getCollection(USERTABLE);
 	}
 
 	public static DBCollection getCollection(String collection)
@@ -56,19 +71,44 @@ public class DataConnection {
 		return mongoDb.getCollection(collection);
 	}
 
-	public static void addEvent(EventData evetnData) throws IOException {
+	public static void addEvent(EventData eventData) throws IOException {
 		if (mongoDb == null)
 			new DataConnection();
-		DBCollection dbc = mongoDb.getCollection("sellerInfo");
+
+		BasicDBObject bobj = new BasicDBObject(EventData.OWNER,
+				eventData.getOwner()).append(EventData.EVENTID,
+				eventData.getEventId());
+		StringBuffer sb = new StringBuffer();
+		List<Contact> cList = eventData.getContacts();
+		BasicDBList bdbl = new BasicDBList();
+		for (int ix = 0; ix < cList.size(); ix++) {
+			bdbl.add(cList.get(ix).getUid());
+		}
+
+		bobj.append(EventData.INVITES, bdbl);
+		bobj.append(EventData.ACCEPTED, new BasicDBList());
+		bobj.append(EventData.DECLINED, new BasicDBList());
+		event.insert(bobj);
 	}
 
-	public static void modifyEvent(String args[]) throws UnknownHostException {
-		Object dbc = mongoDb.getCollection("sellerInfo");
-		System.out.println(dbc.toString());
+	public static void modifyEvent(String eventId, String contactUID,
+			boolean accept) throws IOException {
+		if (mongoDb == null)
+			new DataConnection();
+		String update = null;
+		if (accept) {
+			update = "{$push:{" + EventData.ACCEPTED + ":'" + contactUID
+					+ "'}}";
+		} else {
+			update = "{$push:{" + EventData.DECLINED + ":'" + contactUID
+					+ "'}}";
+		}
+		BasicDBObject query = new BasicDBObject(EventData.EVENTID, eventId);
+		event.update(query, (DBObject) JSON.parse(update));
 	}
 
 	public static void main(String[] args) throws IOException {
-		new DataConnection();
-		System.out.println(mongoDb);
+		// test
+		DataConnection.modifyEvent("1", "2", true);
 	}
 }
