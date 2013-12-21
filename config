@@ -1,0 +1,4 @@
+uri mongodb://heroku:heroku@paulo.mongohq.com:10031/app20242174
+db app20242174
+event_table event_table
+user_table user_table

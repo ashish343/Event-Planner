@@ -1,16 +1,23 @@
 package event;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import contacts.Contact;
+import database.mongo.DataConnection;
 
 public class EventData {
 	private String owner;
 	private String eventId;
 	private List<Contact> contacts;
+	public static final String OWNER = "owner";
+	public static final String EVENTID = "eventID";
+	public static final String INVITES = "invites";
+	public static final String ACCEPTED = "accepted";
+	public static final String DECLINED = "declined";
 
 	public EventData() {
-
 	}
 
 	public EventData(String owner, String eventId, List<Contact> contacts) {
@@ -50,4 +57,15 @@ public class EventData {
 				+ ", contacts=" + contacts + "]";
 	}
 
+	public void persist() throws IOException {
+		DataConnection.addEvent(this);
+	}
+
+	public static void main(String[] args) throws IOException {
+
+		EventData obj = new EventData("2", "1", new ArrayList<Contact>());
+		obj.persist();
+		System.out.println("done");
+
+	}
 }

@@ -1,6 +1,7 @@
 package contacts;
 
 public class Contact {
+
 	private String name;
 	private String phoneNumber;
 	private String uid = "KpKuBtVCCB";

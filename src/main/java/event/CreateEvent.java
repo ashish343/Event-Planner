@@ -15,6 +15,7 @@ import org.json.JSONObject;
 
 import servlet.DefaultController;
 import contacts.Contact;
+import database.mongo.DataConnection;
 import event.parse.notifications.Notifications;
 
 @SuppressWarnings("serial")
@@ -63,7 +64,7 @@ public class CreateEvent extends DefaultController {
 	}
 
 	private void addtoDB(EventData eventData) throws IOException {
-		// DataConnection.addEvent(eventData);
+		DataConnection.addEvent(eventData);
 	}
 
 	private EventData createEventDataObject(String eventId,
