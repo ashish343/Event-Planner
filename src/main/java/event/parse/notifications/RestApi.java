@@ -1,4 +1,4 @@
-package parse.notifications;
+package event.parse.notifications;
 
 public enum RestApi {
 	PARSE_HOST("https://api.parse.com/"),

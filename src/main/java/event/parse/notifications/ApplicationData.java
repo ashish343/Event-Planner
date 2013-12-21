@@ -1,4 +1,4 @@
-package parse.notifications;
+package event.parse.notifications;
 
 public enum ApplicationData {
 	APLICATION_ID("vMFTELLhOo9RDRql9HpV9lKRot5xQTCCD63wkYdQ"),

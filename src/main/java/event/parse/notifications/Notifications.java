@@ -1,4 +1,4 @@
-package parse.notifications;
+package event.parse.notifications;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -7,6 +7,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.servlet.ServletOutputStream;
 
 import contacts.Contact;
 import event.EventData;
@@ -43,16 +45,19 @@ public class Notifications {
 		in.close();
 	}
 	
-	public static void registerChannel(EventData eventData) {
+	public static void registerChannel(EventData eventData, ServletOutputStream outputStream) {
+		
 		HttpURLConnection con = null;
 		String eventId = eventData.getEventId();
 		String reqbody = "{\"channels\": [\""+  eventId + "\"]}";
 		
 		List<Contact> contacts = eventData.getContacts();
-			
+		
 		for(Contact contact : contacts) {
 			try {
+				
 				String objectId = contact.getUid();
+
 				con = ConnectionUtilility.getHttpConnection(RestApi.PARSE_HOST.toString() + RestApi.INSTALLATION.toString() + "/" + objectId, "PUT");
 				initializeConnection(con);
 				
@@ -78,16 +83,17 @@ public class Notifications {
 		
 		eventData.setContacts(contacts);
 		eventData.setEventId("Temp");
-		registerChannel(eventData);
+		
+		registerChannel(eventData, null);
 	}
 	
-	public static void notifyChannel(EventData eventData) {
+	public static void notifyChannel(EventData eventData, ServletOutputStream outputSteam) {
 		HttpURLConnection con = null;
 		String Message = "New Even has been created";
 		String channel = eventData.getEventId();
-		String msg = "{\"channels\":[\"" + channel + "\"],\"data\": {\"alert\":\""+ Message + "\"}}";
-		
-		
+		String msg = "{\"channels\":[\"" + channel + "\"],\"data\": {\"action\":\"com.example.UPDATE_STATUS\","
+				+ "\"name\": \"Vaughn\", \"newsItem\": \"Man bites dog\"}}";
+	
 		try {
 			con = ConnectionUtilility.getHttpConnection(RestApi.PARSE_HOST.toString() + RestApi.PUSH.toString(), "POST");
 			initializeConnection(con);
@@ -112,7 +118,8 @@ public class Notifications {
 		contacts.add(contact);
 		eventData.setEventId("Temp");
 		eventData.setContacts(contacts);
-		notifyChannel(eventData);
+		
+		notifyChannel(eventData, null );
 	}
 	
 }

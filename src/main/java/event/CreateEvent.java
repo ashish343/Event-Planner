@@ -13,10 +13,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import parse.notifications.Notifications;
 import servlet.DefaultController;
 import contacts.Contact;
-import database.mongo.DataConnection;
+import event.parse.notifications.Notifications;
 
 @SuppressWarnings("serial")
 @WebServlet(name = "CreateEventServlet", urlPatterns = { "/addEvent" })
@@ -24,12 +23,15 @@ public class CreateEvent extends DefaultController {
 	@Override
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		
-		String eventId = EventIdGenerator.generateUniqueEventId();
 
+		String eventId = EventIdGenerator.generateUniqueEventId();
+		ServletOutputStream out = response.getOutputStream();
 		EventData eventData = null;
 		try {
+
 			eventData = createEventDataObject(eventId, request);
+			out.write(eventData.toString().getBytes());
+
 		} catch (JSONException e1) {
 			e1.printStackTrace();
 		}
@@ -37,13 +39,11 @@ public class CreateEvent extends DefaultController {
 		if (eventData != null) {
 			try {
 				addtoDB(eventData);
-				notifyForNewEvent(eventData);
+				notifyForNewEvent(eventData,out);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-
-		ServletOutputStream out = response.getOutputStream();
 
 		out.write(("Event Id").getBytes());
 		out.flush();
@@ -51,13 +51,19 @@ public class CreateEvent extends DefaultController {
 		response.setStatus(HttpServletResponse.SC_OK);
 	}
 
-	private void notifyForNewEvent(EventData eventData) {
-		Notifications.registerChannel(eventData);
-		Notifications.notifyChannel(eventData);
+	private void notifyForNewEvent(EventData eventData, ServletOutputStream out) {
+		Notifications.registerChannel(eventData, out);
+		 try {
+			Thread.currentThread().sleep(1000);
+		} catch (InterruptedException e) {
+			//sleep for 1000 ms
+			e.printStackTrace();
+		}
+		Notifications.notifyChannel(eventData, out);
 	}
 
 	private void addtoDB(EventData eventData) throws IOException {
-		DataConnection.addEvent(eventData);
+		// DataConnection.addEvent(eventData);
 	}
 
 	private EventData createEventDataObject(String eventId,
@@ -65,13 +71,16 @@ public class CreateEvent extends DefaultController {
 		EventData eventData = null;
 		String contacts = request.getParameter(EventParams.CONTACT_LIST
 				.toString());
-		JSONArray jar = new JSONArray(contacts);
 		ArrayList<Contact> carr = new ArrayList<Contact>();
-		for (int ix = 0; ix < jar.length(); ix++) {
-			JSONObject obj = (JSONObject) jar.get(ix);
-			String name = obj.getString(EventParams.NAME.toString());
-			String phone = obj.getString(EventParams.CONTACT_NUMBER.toString());
-			carr.add(new Contact(name, phone));
+		if (contacts != null) {
+			JSONArray jar = new JSONArray(contacts);
+			for (int ix = 0; ix < jar.length(); ix++) {
+				JSONObject obj = (JSONObject) jar.get(ix);
+				String name = obj.getString(EventParams.NAME.toString());
+				String phone = obj.getString(EventParams.CONTACT_NUMBER
+						.toString());
+				carr.add(new Contact(name, phone));
+			}
 		}
 
 		String objectId = request
