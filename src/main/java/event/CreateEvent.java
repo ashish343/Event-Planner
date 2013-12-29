@@ -39,7 +39,7 @@ public class CreateEvent extends DefaultController {
 
 		if (eventData != null) {
 			try {
-				addtoDB(eventData);
+				//addtoDB(eventData);
 				notifyForNewEvent(eventData,out);
 			} catch (Exception e) {
 				e.printStackTrace();
