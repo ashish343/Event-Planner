@@ -1,4 +1,4 @@
-package event;
+package com.event;
 
 public enum EventParams {
 	OBJECT_ID("ObjectId"), CONTACT_LIST("contacts"), NAME("name"), CONTACT_NUMBER(

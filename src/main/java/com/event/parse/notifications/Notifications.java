@@ -1,4 +1,4 @@
-package event.parse.notifications;
+package com.event.parse.notifications;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -10,8 +10,8 @@ import java.util.List;
 
 import javax.servlet.ServletOutputStream;
 
-import contacts.Contact;
-import event.EventData;
+import com.contacts.Contact;
+import com.event.EventData;
 
 public class Notifications {
 	public static void main(String[] args) {

@@ -1,4 +1,4 @@
-package event.parse.notifications;
+package com.event.parse.notifications;
 
 import java.net.HttpURLConnection;
 import java.net.URL;

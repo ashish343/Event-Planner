@@ -1,4 +1,4 @@
-package contacts;
+package com.contacts;
 
 public class Contact {
 

@@ -1,4 +1,4 @@
-package event;
+package com.event;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,10 +13,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import servlet.DefaultController;
-import contacts.Contact;
-import database.mongo.DataConnection;
-import event.parse.notifications.Notifications;
+import com.contacts.Contact;
+import com.database.mongo.DataConnection;
+import com.event.parse.notifications.Notifications;
+import com.servlet.DefaultController;
 
 @SuppressWarnings("serial")
 @WebServlet(name = "CreateEventServlet", urlPatterns = { "/addEvent" })

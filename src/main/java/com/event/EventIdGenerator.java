@@ -1,6 +1,6 @@
-package event;
+package com.event;
 
-import utility.UniqueIdGenerator;
+import com.utility.UniqueIdGenerator;
 
 public class EventIdGenerator extends UniqueIdGenerator{
 	public static String generateUniqueEventId() {

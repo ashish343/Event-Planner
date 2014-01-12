@@ -1,11 +1,11 @@
-package event;
+package com.event;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import contacts.Contact;
-import database.mongo.DataConnection;
+import com.contacts.Contact;
+import com.database.mongo.DataConnection;
 
 public class EventData {
 	private String owner;

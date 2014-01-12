@@ -1,10 +1,12 @@
-package database.mongo;
+package com.database.mongo;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
 
+import com.contacts.Contact;
+import com.event.EventData;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -13,9 +15,6 @@ import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.mongodb.util.JSON;
-
-import contacts.Contact;
-import event.EventData;
 
 public class DataConnection {
 
